@@ -1,0 +1,12 @@
+image:
+  repository: grafana/grafana
+  tag: 7.5.9
+adminPassword: benighil
+
+grafana.ini:
+  smtp:
+    enabled: true
+    host: "smtp.gmail.com:587"
+    user: "mohamed.benighil19@gmail.com"
+    password: "Mars22031993"
+

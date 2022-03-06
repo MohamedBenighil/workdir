@@ -1,0 +1,182 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    checksum/config: 9dda1cc92739403dcb2330cb3ce80259e8aa7bfa7b3351e37bd75154724bb4f8
+    checksum/dashboards-json-config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+    checksum/sc-dashboard-provider-config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
+    checksum/secret: 2f11126337c1f57dbf0ed8727339d9a6eb3468700079b198121e7a0ccf8a1a82
+    cni.projectcalico.org/containerID: 2049b171cd8dc6fdb786230ef934acdeaa4165f8d8166664fa9fbf1f867a1944
+    cni.projectcalico.org/podIP: 192.168.12.217/32
+    cni.projectcalico.org/podIPs: 192.168.12.217/32
+  creationTimestamp: "2022-03-05T23:30:13Z"
+  generateName: grafana-7f59f99f99-
+  labels:
+    app.kubernetes.io/instance: grafana
+    app.kubernetes.io/name: grafana
+    pod-template-hash: 7f59f99f99
+  name: grafana-7f59f99f99-94g6g
+  namespace: grafana
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ReplicaSet
+    name: grafana-7f59f99f99
+    uid: 925a3579-2da5-460e-9100-c38de06f5131
+  resourceVersion: "99921"
+  uid: fc0a38bb-7d88-4e27-9ecf-9e58aadcf1ab
+spec:
+  automountServiceAccountToken: true
+  containers:
+  - env:
+    - name: GF_SECURITY_ADMIN_USER
+      valueFrom:
+        secretKeyRef:
+          key: admin-user
+          name: grafana
+    - name: GF_SECURITY_ADMIN_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: admin-password
+          name: grafana
+    - name: GF_PATHS_DATA
+      value: /var/lib/grafana/
+    - name: GF_PATHS_LOGS
+      value: /var/log/grafana
+    - name: GF_PATHS_PLUGINS
+      value: /var/lib/grafana/plugins
+    - name: GF_PATHS_PROVISIONING
+      value: /etc/grafana/provisioning
+    image: grafana/grafana:7.5.9
+    imagePullPolicy: IfNotPresent
+    livenessProbe:
+      failureThreshold: 10
+      httpGet:
+        path: /api/health
+        port: 3000
+        scheme: HTTP
+      initialDelaySeconds: 60
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 30
+    name: grafana
+    ports:
+    - containerPort: 80
+      name: service
+      protocol: TCP
+    - containerPort: 3000
+      name: grafana
+      protocol: TCP
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /api/health
+        port: 3000
+        scheme: HTTP
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /etc/grafana/grafana.ini
+      name: config
+      subPath: grafana.ini
+    - mountPath: /var/lib/grafana
+      name: storage
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-mgzcz
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: 6a9ff67d6c1c.mylabserver.com
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext:
+    fsGroup: 472
+    runAsGroup: 472
+    runAsUser: 472
+  serviceAccount: grafana
+  serviceAccountName: grafana
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - configMap:
+      defaultMode: 420
+      name: grafana
+    name: config
+  - emptyDir: {}
+    name: storage
+  - name: kube-api-access-mgzcz
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-05T23:30:14Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-06T06:59:04Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-06T06:59:04Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-05T23:30:13Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://bf34c3d1c2230bbb97baab180f489a98192c992a3ab8c66a8a19ec3cbfd059c4
+    image: grafana/grafana:7.5.9
+    imageID: docker-pullable://grafana/grafana@sha256:2a44c12c7a603e15b81aa08ac41f1fbd1fef7bfc3ee3f9e027845e1f7b1d36fe
+    lastState:
+      terminated:
+        containerID: docker://9ba442435f3187342cf94ec60ad3996a5dafb643cd7d3a78b78068e1437bb66f
+        exitCode: 0
+        finishedAt: "2022-03-06T01:10:10Z"
+        reason: Completed
+        startedAt: "2022-03-05T23:30:25Z"
+    name: grafana
+    ready: true
+    restartCount: 1
+    started: true
+    state:
+      running:
+        startedAt: "2022-03-06T06:58:51Z"
+  hostIP: 172.31.97.149
+  phase: Running
+  podIP: 192.168.12.217
+  podIPs:
+  - ip: 192.168.12.217
+  qosClass: BestEffort
+  startTime: "2022-03-05T23:30:14Z"
