@@ -8,5 +8,5 @@ grafana.ini:
     enabled: true
     host: "smtp.gmail.com:587"
     user: "mohamed.benighil19@gmail.com"
-    password: "Mars22031993"
+    password: "********"
 
